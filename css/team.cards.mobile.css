@@ -1,0 +1,21 @@
+/* Team tab – mobile-only overrides, strictly scoped to #aboutnlm-team */
+@media (max-width: 767px){
+  /* Neutralize legacy layout bits that cause gaps */
+  #aboutnlm-team .articles__col { display:grid !important; grid-template-columns: 1fr !important; justify-items:center !important; gap:20px !important; padding:20px 0 !important; height:auto !important; }
+  #aboutnlm-team .articles__col .articles__item { position:static !important; top:auto !important; left:auto !important; transform:none !important; width:auto !important; padding:0 !important; background:transparent !important; }
+  #aboutnlm-team .articles__item .articles__item-link { display:none !important; }
+
+  /* Figma mobile card: 164x324, image 129.32x162, info panel 147px */
+  #aboutnlm-team .team-card{ width:164px !important; height:324px !important; background:#FFFFFF !important; border-radius:8px !important; overflow:hidden !important; position:relative !important; box-shadow:0 6px 18px rgba(11,47,73,.12) !important; }
+  #aboutnlm-team .team-card .team-photo{ padding:0 !important; margin-top:15px !important; height:auto !important; display:flex !important; align-items:center !important; justify-content:center !important; }
+  #aboutnlm-team .team-card .team-photo img{ width:129.32px !important; height:162px !important; border-radius:0 !important; object-fit:cover !important; display:block !important; }
+
+  /* Switch to mobile info block */
+  #aboutnlm-team .team-card .team-info-desktop{ display:none !important; }
+  #aboutnlm-team .team-card .team-info-mobile{ display:flex !important; flex-direction:column !important; align-items:center !important; justify-content:flex-start !important; text-align:center !important; position:absolute !important; left:0 !important; bottom:0 !important; width:100% !important; height:147px !important; background:#173750 !important; color:#fff !important; padding:20px 9px 15px !important; gap:4px !important; }
+  #aboutnlm-team .team-card .team-info-mobile h3{ font-weight:700 !important; font-size:16px !important; margin:0 !important; color:#fff !important; text-transform:none !important; }
+  #aboutnlm-team .team-card .team-info-mobile p{ font-size:13px !important; margin:0 !important; color:#fff !important; }
+  #aboutnlm-team .team-card .team-info-mobile .social-icons{ display:flex !important; gap:10px !important; margin-top:auto !important; padding-bottom:10px !important; }
+  #aboutnlm-team .team-card .team-info-mobile .social-icons a{ background:#FFFFFF !important; border-radius:6px !important; }
+  #aboutnlm-team .team-card .team-info-mobile .social-icons svg{ color:#173750 !important; }
+}

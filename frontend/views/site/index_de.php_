@@ -1,0 +1,99 @@
+<?php
+/* @var $this yii\web\View */
+/* @var $threePosts \common\models\Article[] */
+/* @var $twoPostsAboutUs \common\models\Article[] */
+/* @var $projects \common\models\Project[] */
+/* @var $partners \common\models\Partner[] */
+/* @var $testimonials \common\models\Testimonial[] */
+/* @var $videos \common\models\Video[] */
+/* @var $sliders \common\models\Slider[] */
+$this->title = Yii::t('frontend', 'Main page');
+$this->params['custom_header'] = [
+    'class' => 'hero',
+    'content' => Yii::$app->controller->renderLangPartial('_header_slider', [
+        'sliders' => $sliders,
+    ])
+];
+?>
+<section class="our-become" id="our-become">
+    <div class="hero-quote__wrap hero-quote__wrap--mobile">
+        <div class="hero-quote">
+            <h3>Veränderungen beginnen mit Verantwortung!</h3>
+            <p>Wir sind nicht bereit, zur Seite zu treten, unsere Verantwortung endet nicht an der Schwelle unseres Hauses. Unser Zuhause ist jede Straße, durch die wir gehen, unser Zuhause ist jeder Mensch, den wir treffen, unser Zuhause ist unsere Stadt und unser Land. Und wir wollen, dass unser Haus sauber ist, damit unser Haus nicht hungrig, krank, verlassen und elend ist. Keine Veränderung in unserem Land wird unsere Menschlichkeit und Reaktionsfähigkeit beeinträchtigen, nur wir können es tun.</p>
+            <p>Übernehmen Sie Verantwortung für Ihr Zuhause.</p>
+        </div>
+    </div>
+    <div class="our-become__top">
+        <div class="our-become__left">
+            <a class="link-book" href="<?= \yii\helpers\Url::to(['@web/pdf/Новая_Жизнь_collect.pdf', 'language' => '']) ?>" target="_balnk" rel="nofollow"></a>
+            <div class="our-become__left-hover">
+<!--                <h3>Mission Log, Issue 3.0</h3>-->
+                <a class="our-become__hover-btn our-become__hover-btn--book" href="<?= \yii\helpers\Url::to(['@web/pdf/Новая_Жизнь_collect.pdf', 'language' => '']); ?>" title="read">LESEN SIE</a>
+            </div>
+        </div>
+        <div class="our-become__right">
+            <div class="our-become__hover">
+                <h3>Ein wenig Fürsorge kann ihr Leben verändern.</h3>
+                <p>Wir haben noch viel Arbeit vor uns, und wir brauchen Ihre Hilfe. Schauen Sie sich unsere Arbeit auf der Website an und wählen Sie den Bereich, den Sie beeinflussen möchten. Bleiben Sie mit uns in Verbindung, um die Früchte Ihrer Investition in unseren kommenden Berichten über die von uns geleistete Arbeit zu sehen.</p>
+                <a class="our-become__hover-btn" href="#help" title="Hilfe">Hilfe</a>
+            </div>
+        </div>
+    </div>
+</section>
+<?php echo $this->render('_index_actions') ?>
+<?php echo $this->render('_index_news_section', [
+    'threePosts' => $threePosts,
+    'twoPostsAboutUs' => $twoPostsAboutUs,
+    'videos' => $videos
+]) ?>
+<?php if (!empty($projects)) {
+    echo $this->render('_index_projects', [
+        'projects' => $projects
+    ]);
+}?>
+<?php if (!empty($testimonials)) :?>
+<section class="testimonials">
+    <div class="testimonials__wrap">
+        <div class="testimonials__items-wrap">
+            <?php foreach ($testimonials as $testimonial) : ?>
+                <div class="testimonials__item">
+                    <div class="testimonials__img">
+                        <img src="<?= Yii::$app->glide->createSignedUrl(['glide/index', 'path' => $testimonial->thumbnail_path], true) ?>" width="540" height="460" alt="CaroLena Headey">
+                    </div>
+                    <div class="testimonials__main">
+                        <h3><?= $testimonial->title ?></h3>
+                        <p>
+                            <?php
+                                $arrayText = explode('.', $testimonial->text);
+                                echo $arrayText[0] . '.';
+                            ?>
+                        </p>
+                        <a href="<?= \yii\helpers\Url::to(['/site/testimonials']) ?>" class="testimonials__details">Rezension lesen</a>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+            <div class="testimonials__all">
+                <a href="<?= \yii\helpers\Url::to(['/site/testimonials']) ?>" title="All testimonials">
+                    <span>Alle Referenzen</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+<?php endif ?>
+<?php if (!empty($partners)) : ?>
+<section class="partners">
+    <div class="partners__wrap">
+        <div class="partners__slider partners__slider--js">
+            <?php foreach ($partners as $partner) : ?>
+                <a class="partners__item" href="<?= \yii\helpers\Url::to(['/site/partners']) ?>">
+                    <img src="<?= Yii::$app->glide->createSignedUrl([
+                        'glide/index',
+                        'path' => $partner->thumbnail_path
+                    ], true) ?>">
+                </a>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</section>
+<?php endif; ?>

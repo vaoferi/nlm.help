@@ -1,0 +1,100 @@
+<?php
+/**
+ * Created by Rex IT
+ * @author Konstantin Kharalampidi <kharalampidi@rexit.info>
+ */
+
+use yii\bootstrap\Nav;
+
+?>
+<div class="header__wrap">
+    <header class="header">
+        <a class="logo-link" href="/" title="<?= Yii::t('frontend', 'New life - International mission') ?>">
+            <div class="logo">
+                <?= \common\widgets\LangLogoWidget::widget() ?>
+            </div>
+        </a>
+        <div class="header__lang header__lang--desktop">
+            <?php foreach (Yii::$app->params['availableLocales'] as $code => $lang) : ?>
+                <a href="<?= \yii\helpers\Url::to(array_merge( \Yii::$app->request->get(), [\Yii::$app->controller->route,'language' => $code])) ?>"><?= $lang ?></a>
+            <?php endforeach; ?>
+        </div>
+        <button class="burger-menu" aria-label="open menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <nav class="nav">
+            <button class="close-burger-menu" aria-label="close menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <div class="nav-wrap">
+                <div class="header__lang header__lang--mobile">
+                    <?php foreach (Yii::$app->params['availableLocales'] as $code => $lang) : ?>
+                        <a href="<?= \yii\helpers\Url::to(['/site/set-locale', 'locale' => $code]) ?>" class="<?= ($lang === \Yii::$app->language)?'active':'' ?>" ><?= $lang ?></a>
+                    <?php endforeach; ?>
+                </div>
+            <?php
+            echo Nav::widget([
+                'activateParents' => true,
+                'items' => [
+    //                [
+    //                    'label' => Yii::t('frontend', 'Projects'),
+    //                    'url' => ['project/index'],
+    //                ],
+    //                [
+    //                    'label' => Yii::t('frontend', 'Partners'),
+    //                    'url' => ['site/partners'],
+    //                ],
+    //                [
+    //                    'label' => Yii::t('frontend', 'News'),
+    //                    'url' => ['article/index'],
+    //                ],
+                    [
+                        'label' => Yii::t('frontend', 'Our projects'),
+                        'dropDownOptions' => [
+                            'class' => 'header__sub-menu'
+                        ],
+                        'items' => \common\models\ArticleCategory::getNavCategories(),
+                        'url' => 'javascript:void(0)'
+                    ],
+                    [
+                        'label' => Yii::t('frontend', 'Contact US'),
+                        'url' => ['site/contact'],
+                    ],
+                    [
+                        'label' => Yii::t('frontend', 'Media'),
+                        'url' => ['site/videos'],
+                    ],
+//                    [
+//                        'label' => Yii::t('frontend', 'Our projects'),
+//                        'url' => ['#'],
+//                    ],
+    //                [
+    //                    'label' => Yii::t('frontend', 'Gallery'),
+    //                    'url' => ['album/index'],
+    //                ],
+//                    [
+//                        'label' => Yii::t('frontend', 'Donate'),
+//                        'url' => ['site/donate'],
+////                        'url' => ['project/donate','id'=>7],
+//                        'linkOptions' => [
+//                            'class' => 'active-donate'
+//                        ]
+//                    ],
+                    [
+                        'label' => Yii::t('frontend', 'About Us'),
+                        'url' => ['site/about'],
+                    ],
+                ],
+                'options' => ['class' => 'nav__list']
+            ]);
+            ?>
+            </div>
+        </nav>
+
+    </header>
+</div>

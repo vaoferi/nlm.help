@@ -1,0 +1,539 @@
+'use strict';
+
+$(document).ready(function() {
+
+    // Hide Header on on scroll down
+    var didScroll;
+    var lastScrollTop = 0;
+    var delta = 5;
+    var navbarHeight = $('.header__wrap').outerHeight();
+
+    if($(window).outerWidth() >= 768) {
+        if($(document).outerHeight() >= $(window).outerHeight()*2) {
+            $('.header__wrap').addClass('scroll-active');
+            var heightHead = $('.header__wrap').outerHeight();
+            $('.header--top').css({'height': heightHead, 'flex': '1 0 auto'});
+
+            $(window).scroll(function(event){
+                didScroll = true;
+            });
+
+            setInterval(function() {
+                if (didScroll) {
+                    hasScrolled();
+                    didScroll = false;
+                }
+            }, 250);
+        }
+    }
+
+    function hasScrolled() {
+        var st = $(window).scrollTop();
+        // Make sure they scroll more than delta
+        if(Math.abs(lastScrollTop - st) <= delta)
+            return;
+
+        // If they scrolled down and are past the navbar, add class .nav-up.
+        // This is necessary so you never see what is "behind" the navbar.
+        if (st > lastScrollTop && st > navbarHeight){
+            // Scroll Down
+            $('.header__wrap').css({'transform': 'translateY(-100%)',  'backgroundColor': '#fff', 'position': 'fixed', 'visibility': 'hidden'});
+            $('.header__wrap').addClass('no-shadow')
+        } else {
+            // Scroll Up
+            if(st + $(window).height() < $(document).height()) {
+                $('.header__wrap').css({'transform': 'translateY(0)', 'transition': 'transform .3s linear', 'backgroundColor': '#fff', 'position': 'fixed', 'visibility': 'visible'});
+                $('.header__wrap').addClass('no-shadow')
+            }
+        }
+
+        if(st < 200) {
+            $('.header__wrap').removeClass('no-shadow')
+            $('.header__wrap').css({'transform': 'translateY(0)', 'backgroundColor': 'transparent', 'position': 'absolute', 'visibility': 'visible'});
+        }
+
+        lastScrollTop = st;
+    }
+    // Hide Header on on scroll down
+
+    //index page - hero section - bg slider
+    var heroSlider = $('.hero__slider');
+
+    heroSlider.on('init', function(event, slick){
+        var maxHeightHeroTitle = Math.max.apply(Math, $('.hero-title').map(function() { return $(this).height(); }))
+        var heightHero = $('.hero__slider-img').height();
+        if(+(heightHero / maxHeightHeroTitle).toFixed(1) > 3.6) {
+            $('.hero-title').addClass('more-font');
+        }
+        if(+(heightHero / maxHeightHeroTitle).toFixed(1) > 3) {
+            $('.hero-title').addClass('less-font');
+        }
+        //find next slide
+        var prevSlideItem = slick.$slides.get(0);
+        //clone link
+        var linkNext = $(prevSlideItem).find('.hero-title__btn').clone();
+        //append in slider
+        heroSlider.append(linkNext);
+    });
+
+    heroSlider.slick({
+        dots: false,
+        autoplay: true,
+        autoplaySpeed: 8000,
+        mobileFirst: true
+    });
+
+    heroSlider.on('beforeChange', function(event, slick, currentSlide, nextSlide) {
+        //remove old links
+        $('.hero__slider > a').remove();
+        //find next slide
+        var prevSlideItem = slick.$slides.get(nextSlide);
+        //clone link
+        var linkNext = $(prevSlideItem).find('.hero-title__btn').clone();
+        //append in slider
+        heroSlider.append(linkNext);
+    });
+
+    //home page - partners slider
+    $('.partners__slider--js').slick({
+        dots: false,
+        arrows: true,
+        autoplay: true,
+        autoplaySpeed: 8000,
+        slidesToShow: 4,
+        slidesToScroll: 1,
+        infinite: true,
+        responsive: [
+            {
+                breakpoint: 1300,
+                settings: {
+                    slidesToShow: 4,
+                    slidesToScroll: 1
+                }
+            },
+            {
+                breakpoint: 768,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 1
+                }
+            }
+        ]
+    });
+
+    //projects page slider
+    $('.projects-page-hero__slider').slick({
+        dots: false,
+        autoplay: true,
+        autoplaySpeed: 8000,
+        mobileFirst: true
+    });
+
+    //init fancybox photos page
+    $('[data-fancybox="gallery-photos"]').fancybox({
+        thumbs: false,
+        hash:false,
+        loop: true,
+        keyboard: true,
+        animationEffect: false,
+        arrows: true,
+        clickContent: false,
+        toolbar: true,
+        helpers:  {
+            title : {
+                type : 'inside'
+            }
+        }
+    });
+
+    //albulm page slider
+    $('.albulm-hero__slider--js').slick({
+        dots: false,
+        autoplay: true,
+        autoplaySpeed: 8000,
+        mobileFirst: true
+    });
+
+    var projectDocumentBtn = $('.projects-one-other__btn--js');
+    var projectDocumentPopup = $('.popup-document__overlay');
+    var isSlider = true;
+    projectDocumentBtn.on('click', function() {
+        //one project popup slider
+        if(isSlider) {
+            $('.popup-document__slider').slick({
+                dots: false,
+                autoplay: false,
+                autoplaySpeed: 8000,
+                mobileFirst: true
+            });
+        }
+        isSlider = false;
+        body.addClass('no-scroll');
+        projectDocumentPopup.addClass('show');
+    });
+
+    $('.popup-document__close').on('click', function() {
+        body.removeClass('no-scroll');
+        projectDocumentPopup.removeClass('show');
+    });
+
+    //news page slider
+    $('.news-hero__slider').slick({
+        dots: false,
+        autoplay: true,
+        autoplaySpeed: 8000,
+        mobileFirst: true
+    });
+
+    var btnFilter = $('.news-page__filter-btn--js');
+    var filter = $('.news-page__filter-news-form-wrap');
+    btnFilter.on('click', function() {
+        filter.slideToggle();
+    });
+
+    // news page masonry init
+    $(window).ready(function() {
+        if($('.articles__item').length > 2) {
+            setTimeout(function() {
+                var opts = {
+                    itemSelector: '.articles__item',
+                    columnWidth: '.articles__item',
+                    percentPosition: true,
+                    gutter: 0
+                };
+                $('.news-page__wrap--grid, .category__wrap').masonry(opts);
+            }, 400);
+        }
+    })
+
+    //videos page masonry init
+    $(window).ready(function() {
+        setTimeout(function() {
+            var optsVideos = {
+                itemSelector: '.videos-page__item',
+                columnWidth: '.videos-page__item',
+                gutter: 0,
+                percentPosition: true,
+                transitionDuration: 0
+            };
+            $('.videos-page__list').masonry(optsVideos);
+        }, 400);
+    })
+
+    //contact page masonry init
+    $(window).ready(function() {
+        setTimeout(function() {
+            var optsVideos = {
+                itemSelector: '.partners-page__item',
+                columnWidth: '.partners-page__item',
+                gutter: 0,
+                percentPosition: true,
+                transitionDuration: 0
+            };
+            $('.partners-page__list').masonry(optsVideos);
+        }, 400);
+    })
+
+    //testimonials page masonry init
+    $(window).ready(function() {
+        setTimeout(function() {
+            var optsVideos = {
+                itemSelector: '.testimonials-page__item',
+                columnWidth: '.testimonials-page__item',
+                gutter: 0,
+                percentPosition: true,
+                transitionDuration: 0
+            };
+            $('.testimonials-page__list').masonry(optsVideos);
+        }, 400);
+    })
+
+    //news one page slider
+    $('.about-page-slider--js').slick({
+        dots: false,
+        autoplay: true,
+        arrow: true,
+        autoplaySpeed: 10000,
+        variableWidth: true,
+        slidesToScroll: 1,
+        slidesToShow: 3,
+        // infinite: false,
+        responsive: [
+            {
+                breakpoint: 1024,
+                settings: {
+                    slidesToShow: 2,
+                    // infinite: false,
+                    slidesToScroll: 1,
+                    centerMode: false,
+                    variableWidth: false
+                }
+            },
+            {
+                breakpoint: 768,
+                settings: {
+                    // infinite: false,
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                    centerMode: false,
+                    variableWidth: false
+                }
+            }
+        ]
+    });
+
+    //news one page slider
+    $('.news-one-slider--js').slick({
+        dots: false,
+        autoplay: true,
+        autoplaySpeed: 10000,
+        variableWidth: true,
+        slidesToScroll: 1,
+        centerPadding: '60px',
+        slidesToShow: 3,
+        centerMode: true,
+        responsive: [
+            {
+                breakpoint: 768,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                    centerMode: false,
+                    variableWidth: false
+                }
+            }
+        ]
+    });
+
+    //news one page slider
+    $('.about-page-diploma-slider--js').slick({
+        dots: false,
+        autoplay: true,
+        autoplaySpeed: 10000,
+        variableWidth: true,
+        slidesToScroll: 1,
+        slidesToShow: 4,
+        centerMode: true,
+        responsive: [
+            {
+                breakpoint: 1024,
+                settings: {
+                    slidesToShow: 3,
+                    slidesToScroll: 1,
+                    centerMode: false,
+                    variableWidth: false
+                }
+            },
+            {
+                breakpoint: 768,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                    centerMode: false,
+                    variableWidth: false
+                }
+            }
+        ]
+    });
+
+    //btn hero section - scroll to next section
+    var heroBtn = $('.hero__scroll--js, .our-become__hover-btn, .counters__link, .our-projects__link, .our-become__link, .hero-link--js');
+    heroBtn.click(function () {
+        var elementClick = $(this).attr("href");
+        if ($(elementClick).length != 0) {
+            $('html, body').animate({scrollTop: $(elementClick).offset().top}, 700);
+        }
+        return false;
+    });
+
+    var body = $('body');
+    var burgerMenu = $('.burger-menu');
+    var closeBurgerMenu = $('.close-burger-menu');
+    var navHeader = $('nav.nav');
+
+    //mobile burger menu button - show menu
+    burgerMenu.click(function() {
+        navHeader.addClass('active');
+        body.addClass('no-scroll');
+    });
+
+    //mobile menu button close - hide menu
+    closeBurgerMenu.click(function() {
+        navHeader.removeClass('active');
+        body.removeClass('no-scroll');
+    });
+
+    //if progress bar info width does not fit - mirror that
+    var progressBarInfo = $('.progress__progressbar-info');
+    var progressBar = $('.progress__progressbar');
+    for(var i=0; i<progressBarInfo.length; i++) {
+        if(progressBar.eq(i).outerWidth() - progressBarInfo.eq(i).position().left  < progressBarInfo.eq(i).outerWidth()) {
+            progressBarInfo.eq(i).addClass('active-mirror');
+        } else {
+            progressBarInfo.eq(i).removeClass('active-mirror');
+        }
+    }
+
+
+    var mapMark = $('.contact-page__map-mark'),
+        mainMap = $('.contact-page__map');
+
+    function moveMarkers() {
+        for (var i = 0; i <= mapMark.length; i++) {
+            var coorTop = ((mainMap.height() * mapMark.eq(i).attr('data-top')) / 1920);
+            mapMark.eq(i).css('top', coorTop + 'px');
+
+            var coorLeft = ((mainMap.width() * mapMark.eq(i).attr('data-left')) / 1324.03);
+            mapMark.eq(i).css('left', coorLeft + 'px');
+        }
+    }
+
+    $(window).resize(function () {
+        moveMarkers();
+    });
+
+    moveMarkers();
+
+    //do responsive class iframe if not have "responsive-embed"
+    var iframes = $('iframe');
+    if(!$('.liqpay-page').length) {
+        for(var k = 0; k<iframes.length; k++) {
+            if(!iframes.eq(k).parent().hasClass('responsive-embed')) {
+                iframes.eq(k).parent().addClass('responsive-embed');
+            }
+        }
+    }
+
+    //news link author
+    var authorLink = $('.news__author-link--js');
+    authorLink.on('click', function(e) {
+        e.preventDefault();
+        // var text = $(this).find('span').text().trim().replace(/\s/g, '');
+        var text = $(this).find('span').attr('data-id');
+        var url = window.location.origin + '/about' + '#' + text;
+        window.location = url;
+    });
+
+    //about us page
+    //slider items click - show popup
+    var aboutUsSlides = $('.news-one-slider-item');
+    aboutUsSlides.on('click', function() {
+        var id = $(this).attr('data-id');
+        $('.about-us__info').removeClass('show');
+        $('#' + id).addClass('show');
+    });
+
+    //if windows about-us with #Name in url show popup info
+    var aboutPage = $('.about-page-info');
+    if(aboutPage.length) {
+        aboutPage.removeClass('show');
+        var hashUrl = window.location.hash.substr(1);
+        if(hashUrl) {
+            $('#' + hashUrl).addClass('show');
+
+            if ($('#about-us__info-section').length != 0) {
+                $('html, body').animate({scrollTop: $('#about-us__info-section').offset().top - 300}, 700);
+            }
+        }
+    }
+
+    //popup info close
+    var btnClosePopupInfo = $('.about-us__info-close');
+    btnClosePopupInfo.on('click', function() {
+        $('.about-us__info').removeClass('show');
+    });
+
+    $(window).scroll(scrollCount);
+    var viewed = false;
+    var sectionCounters = $(".counters");
+
+    //scroll trigger to section
+    function isScrolledIntoView(elem) {
+        var docViewTop = $(window).scrollTop();
+        var docViewBottom = docViewTop + $(window).height();
+
+        var elemTop = $(elem).offset().top;
+        var elemBottom = elemTop + $(elem).height();
+
+        return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
+    }
+
+    //after scroll trigger section
+    //do animation count numbers
+    function scrollCount() {
+        if (sectionCounters.length !== 0 && isScrolledIntoView(sectionCounters) && !viewed) {
+            viewed = true;
+            $('.counters__value').each(function () {
+                var $this = $(this);
+                $({ Counter: 0 }).animate({ Counter: $this.attr('data-counter') }, {
+                    duration: 2000,
+                    easing: 'swing',
+                    step: function () {
+                        $this.text(Math.ceil(this.Counter));
+                    },
+                    complete: function() {
+                        $this.text(this.Counter.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1 '));
+                    }
+                });
+            });
+        }
+    }
+
+    //slider range for After before slider
+    var rangeSlider = document.getElementById('comparison__slider');
+
+    if(document.getElementById('comparison__slider')) {
+        noUiSlider.create(rangeSlider, {
+            start: [50],
+            range: {
+                'min': [0],
+                'max': [100]
+            }
+        });
+
+        rangeSlider.noUiSlider.on('update', function (values, handle) {
+            $('.comparison__after').css({'width': values[handle] + '%'});
+        });
+    }
+
+    //after before slider
+    $(function(rangeSlider) {
+        var $comparisons = $('.comparison');
+        $.each($comparisons, function() {
+
+            // Variables
+            var $comparison = $(this);
+            var $props; // Controls which values to change (height or width)
+            var $top = $('li:last-child', $comparison);
+
+            // Set properties
+            if($comparison.hasClass('horizontal'))
+                $props = ['height', 'Height', 'Y'];
+            else if($comparison.hasClass('vertical'))
+                $props = ['width', 'Width', 'X'];
+            else // No direction, exit and continue with next comparison pair (if any)
+                return true;
+
+            // Set top image to half height/width
+            $top.css($props[0], '50%');
+
+            // Events
+            $comparison.on('mousedown', function(e) {
+                if(e.which === 1) {
+                    $top.css($props[0], (e['offset' + $props[2]] / $comparison[0]['offset' + $props[1]]) * 100 + '%');
+                    $comparison.on('mousemove click', function(e) {
+                        var value = (e['offset' + $props[2]] / $comparison[0]['offset' + $props[1]]) * 100;
+                        rangeSlider.noUiSlider.set(value);
+                        $top.css($props[0], (e['offset' + $props[2]] / $comparison[0]['offset' + $props[1]]) * 100 + '%');
+                    });
+                    e.preventDefault();
+                }
+            });
+            $(window).on('mouseup', function() {
+                $comparison.off('mousemove');
+            });
+
+        });
+
+    }(rangeSlider));
+});

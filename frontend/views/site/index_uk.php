@@ -1,0 +1,152 @@
+<?php
+/* @var $this yii\web\View */
+/* @var $threePosts \common\models\Article[] */
+/* @var $twoPostsAboutUs \common\models\Article[] */
+/* @var $projects \common\models\Project[] */
+/* @var $partners \common\models\Partner[] */
+/* @var $testimonials \common\models\Testimonial[] */
+/* @var $videos \common\models\Video[] */
+/* @var $sliders \common\models\Slider[] */
+$this->title = Yii::t('frontend', 'Main page');
+$this->params['custom_header'] = [
+    'class' => 'hero',
+    'content' => Yii::$app->controller->renderLangPartial('_header_slider', [
+        'sliders' => $sliders,
+    ])
+];
+?>
+<section class="our-become" id="our-become">
+    <div class="hero-quote__wrap hero-quote__wrap--mobile">
+        <div class="hero-quote">
+            <h3>Изменения начинаются с ответственности!</h3>
+            <p>Мы не согласны оставаться в стороне, наша ответственность не заканчивается порогом нашего дома. Наш дом это каждая улица по которой мы ходим наш дом это каждый человек которого мы встречаем наш дом это наш город и наша страна. И мы хотим чтобы наш дом был чистым чтобы в нашем доме не было голодающих, больных, брошенных и несчастных. Никакие перемены в нашей стране не смогут повлиять на нашу человечность и отзывчивость, это можем сделать только мы.
+                <br>
+                Возьмите на себя ответственность за свой дом.
+            </p>
+        </div>
+    </div>
+    <div class="our-become__top">
+        <div class="our-become__left">
+            <a class="link-book" href="<?= \yii\helpers\Url::to(['@web/pdf/Новая_Жизнь_collect.pdf']) ?>" target="_balnk" rel="nofollow"></a>
+            <div class="our-become__left-hover">
+<!--                <h3>Журнал миссии, выпуск 3.0</h3>-->
+                <a class="our-become__hover-btn our-become__hover-btn--book" href="<?= \yii\helpers\Url::to(['@web/pdf/Новая_Жизнь_collect.pdf']) ?>" title="read">читать</a>
+            </div>
+        </div>
+        <div class="our-become__right">
+            <div class="our-become__hover">
+                <h3>Немного заботы может изменить их жизнь</h3>
+                <p>У нас впереди ещё много работы, и ваша помощь нам просто необходима. Ознакомьтесь с нашей работой на сайте и выберите сферу на которую вы хотите оказать свое влияние. Оставайтесь с нами на связи, чтобы видеть плоды своих вложений в наших грядущих отчётах по проделанной работе.</p>
+                <a class="our-become__hover-btn" href="#help"
+                   title="помочь">помочь</a>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="awards">
+    <?= \common\widgets\SliderSertificatWidget::widget();?>
+</section>
+
+<?php echo $this->render('_index_actions') ?>
+<?php echo $this->render('_index_news_section', [
+    'threePosts' => $threePosts,
+    'twoPostsAboutUs' => $twoPostsAboutUs,
+    'videos' => $videos
+]) ?>
+<?php if (!empty($projects)) {
+    echo $this->render('_index_projects', [
+        'projects' => $projects
+    ]);
+}?>
+<?php if (!empty($testimonials)) : ?>
+<section class="testimonials">
+    <div class="testimonials__wrap">
+        <div class="testimonials__items-wrap">
+            <?php foreach ($testimonials as $testimonial) : ?>
+                <div class="testimonials__item">
+                    <div class="testimonials__img">
+                        <img src="<?= Yii::$app->glide->createSignedUrl(['glide/index', 'path' => $testimonial->thumbnail_path], true) ?>" width="540" height="460" alt="CaroLena Headey">
+                    </div>
+                    <div class="testimonials__main">
+                        <h3><?= $testimonial->title ?></h3>
+                        <p>
+                            <?php
+                            $arrayText = explode('.', $testimonial->text);
+                            echo $arrayText[0] . '.';
+                            ?>
+                        </p>
+                        <a href="<?= \yii\helpers\Url::to(['/site/testimonials']) ?>" class="testimonials__details">Читать отзыв</a>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+            <div class="testimonials__all">
+                <a href="<?= \yii\helpers\Url::to(['/site/testimonials']) ?>" title="All testimonials">
+                    <span>Все отзывы</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+<?php endif; ?>
+<?php if (!empty($partners)) : ?>
+<section class="partners">
+    <div class="partners__wrap">
+        <div class="partners__slider partners__slider--js">
+            <?php foreach ($partners as $partner) : ?>
+                <a class="partners__item" href="<?= \yii\helpers\Url::to(['/site/partners']) ?>">
+                    <img src="<?= Yii::$app->glide->createSignedUrl([
+                        'glide/index',
+                        'path' => $partner->thumbnail_path
+                    ], true) ?>" alt="">
+                </a>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</section>
+<?php endif; ?>
+<?php /*
+<section class="help" id="help">
+    <div class="container">
+        <div class="help__wrap">
+            <div class="help__left"></div>
+            <div class="help__right">
+                <h2>Спасибо за желание помочь</h2>
+                <ul class="help__list">
+                    <li class="help__item">
+                        <div class="help__item-left">Телефон:</div>
+                        <div class="help__item-right help__item-right--phone">
+                            <a href="tel: +38 048 796 10 99">+38 048 796 10 99</a>
+                            <a href="tel: +38 063-577-80-80">+38 063-577-80-80</a>
+                        </div>
+                    </li>
+                    <li class="help__item">
+                        <div class="help__item-left">E-mail:</div>
+                        <div class="help__item-right help__item-right--email">
+                            <a href="mailto:nlifeod@gmail.com">nlifeod@gmail.com</a>
+                        </div>
+                    </li>
+                    <li class="help__item">
+                        <div class="help__item-left">Адрес:</div>
+                        <div class="help__item-right">г. Одеса ул. Столбовая 19А</div>
+                    </li>
+                    <li class="help__item">
+                        <div class="help__item-left">Реквизиты:</div>
+                        <div class="help__item-right help__item-right--requisites">
+                            <div class="help__item-right-requisites--left">Приват Банк
+                                <br>5168742227503020
+                                <br>Бельтек Евдокия
+                            </div>
+                            <div class="help__item-right-requisites--right">ГО Християнська Місія «Нове Життя»
+                                <br>«УкрСиббанк»
+                                <br>р/с 26006463615701
+                                <br>Код ЄДРПОУ 38696486
+                                <br>МФО 351005 UAH
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+*/ ?>

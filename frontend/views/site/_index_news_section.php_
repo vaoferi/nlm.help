@@ -1,0 +1,308 @@
+<?php
+use yii\helpers\Url;
+/* @var $this \yii\web\View */
+/* @var $threePosts \common\models\Article[] */
+/* @var $twoPostsAboutUs \common\models\Article[] */
+/* @var $videos \common\models\Video[] */
+
+$this -> registerJs(
+    <<<JS
+if ($(window).width() > 768) {
+    function tabName(evt, tabName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+}
+$(function() {
+    var tabs = $('.tablinks ');
+    // var tabcontentjq = $('.tabcontent');
+    tabs.click(function() {
+        $(this).addClass('active').siblings('.active').removeClass('active');
+    });
+    setInterval(function() {
+        var onTab = tabs.filter('.active');
+        var nextTab = onTab.index() < tabs.length-1 ? onTab.next() : tabs.first();
+        nextTab.click();
+    }, 15000);
+});
+JS
+    , $this ::POS_END);
+
+?>
+<section class="information">
+    <div class="container">
+        <div class="information__wrapper">
+            <div class="tab">
+                <button class="tablinks active" onclick="tabName(event, 'news')"><?= Yii::t('frontend', 'Related news') ?></button>
+                <button class="tablinks" onclick="tabName(event, 'media')"><?= Yii::t('frontend', 'Mass Media about us') ?></button>
+                <button class="tablinks" onclick="tabName(event, 'video')"><?= Yii::t('frontend', 'Videos') ?></button>
+                <button class="tablinks" onclick="tabName(event, 'blogs')"><?= Yii::t('frontend', 'Blogs') ?></button>
+            </div>
+
+            <div id="news" class="tabcontent" style="display: block">
+                <div class="information__title-hide">
+                    <?= Yii::t('frontend', 'Related news') ?>
+                </div>
+                <div class="information__blocks">
+                <?php foreach ($threePosts as $post) : ?>
+                        <div class="information__block">
+                            <div class="information__date">
+                                <div class="information__span-date">
+                                    <?= Yii::$app->formatter->asDate($post->published_at) ?>
+                                </div>
+                            </div>
+                            <a class="information__title" href="<?= Url::to(['article/view', 'slug' => $post->slug]) ?>">
+                                <?= $post->title ?>
+                            </a>
+                            <div class="information__text">
+                                <?= $post->short_description ?>
+                            </div>
+                            <div class="information__image-big">
+                                <img class="information__img" src="<?= Yii::$app->glide->createSignedUrl([
+                                    'glide/index',
+                                    'path' => $post->thumbnail_path,
+                                    'w' => 573,
+                                    'h' => 411,
+                                ], true) ?>" alt="img">
+                            </div>
+                        </div>
+                <?php endforeach; ?>
+                </div>
+                <a class="projects__button" href="<?= Url::to(['article/index']) ?>" title="<?= Yii::t('frontend', 'see all news') ?>"><?= Yii::t('frontend', 'see all news') ?></a>
+            </div>
+            <div id="media" class="tabcontent media">
+                <div class="information__title-hide"><?= Yii::t('frontend', 'Mass Media about us') ?></div>
+                <div class="information__blocks">
+                    <?php foreach ($twoPostsAboutUs as $post) : ?>
+                        <div class="media__block">
+                            <div class="media__icon-block media__icon-block-seven">
+<!--                                <img class="media__icon" src="img/logo1.png" alt="img">-->
+                            </div>
+                            <div class="media__main-block">
+                                <div class="information__date">
+                                    <div class="information__span-date">
+                                        <?= Yii::$app->formatter->asDate($post->published_at) ?>
+                                    </div>
+                                </div>
+                                <a class="media__title media__title-spec" href="<?= Url::to(['article/view', 'slug' => $post->slug]) ?>">
+                                    <?= $post->title ?>
+                                </a>
+                                <div class="media__image">
+                                    <?php if (!empty($post->thumbnail_path)) : ?>
+                                        <img class="media__img" src="<?= Yii::$app->glide->createSignedUrl([
+                                            'glide/index',
+                                            'path' => $post->thumbnail_path,
+                                            'w' => 573,
+                                            'h' => 411,
+                                        ], true) ?>" alt="img">
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    <?php endforeach; ?>
+                </div>
+
+                <a class="projects__button" href="<?= Url::to(['article/index', 'about_us' => 1]) ?>" ><?= Yii::t('frontend', 'see all news about us') ?></a>
+            </div>
+            <div id="video" class="tabcontent video-play">
+                <div class="information__title-hide">
+                    <?= Yii::t('frontend', 'Videos') ?>
+                </div>
+                <div class="information__blocks">
+                    <?php foreach ($videos as $video): ?>
+                        <div class="information__block">
+                            <div class="information__date">
+                                <div class="information__span-date">
+                                    <?= Yii::$app->formatter->asDate($video->created_at) ?>
+                                </div>
+                            </div>
+                            <a class="information__title" href="#">
+                                <?= $video->title ?>
+                            </a>
+                            <div class="information__image-big">
+<!--                                <div class="video-play__block">-->
+<!--                                    <div class="video-play__block-image">-->
+<!--                                        <img class="video-play__img" src="img/polygon.png" alt="img">-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <img class="information__img" src="img/information-img-big.jpg" alt="img">-->
+                                <?= $video->embed_code ?>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+
+                </div>
+                <a class="projects__button" href="<?= Url::to(['site/videos']) ?>" ><?= Yii::t('frontend', 'see all videos') ?></a>
+            </div>
+            <div id="blogs" class="tabcontent blogs">
+                <div class="information__title-hide">
+                    <?= Yii::t('frontend', 'Blogs') ?>
+                </div>
+                <div class="information__blocks">
+                    <div class="information__block">
+                        <div class="information__date">
+                            <div class="information__span-date">
+                                22
+                            </div>
+                            .
+                            <div class="information__span-date">
+                                06
+                            </div>
+                            .
+                            <div class="information__span-date">
+                                2021
+                            </div>
+                        </div>
+                        <a class="information__title" href="#">
+                            Гуманитарная акция в пгт. Татарбунары
+                        </a>
+                        <div class="blogs__text">
+                            Иван Алексеев
+                        </div>
+                        <div class="information__image">
+                            <img class="information__img" src="img/information-img-big.jpg" alt="img">
+                        </div>
+                    </div>
+                    <div class="information__block">
+                        <div class="information__date">
+                            <div class="information__span-date">
+                                22
+                            </div>
+                            .
+                            <div class="information__span-date">
+                                06
+                            </div>
+                            .
+                            <div class="information__span-date">
+                                2021
+                            </div>
+                        </div>
+                        <a class="information__title" href="#">
+                            Миссия подарила новую жизнь бездомной...
+                        </a>
+                        <div class="blogs__text">
+                            Иван Алексеев
+                        </div>
+                        <div class="information__image">
+                            <img class="information__img" src="img/information-img1.jpg" alt="img">
+                        </div>
+                    </div>
+                    <div class="information__block">
+                        <div class="information__date">
+                            <div class="information__span-date">
+                                22
+                            </div>
+                            .
+                            <div class="information__span-date">
+                                06
+                            </div>
+                            .
+                            <div class="information__span-date">
+                                2021
+                            </div>
+                        </div>
+                        <a class="information__title" href="#">
+                            Реконструкция приюта для пожилых и инвалидов..
+                        </a>
+                        <div class="blogs__text">
+                            Иван Алексеев
+                        </div>
+                        <div class="information__image">
+                            <img class="information__img" src="img/information-img2.jpg" alt="img">
+                        </div>
+                    </div>
+
+                    <div class="information__block">
+                        <div class="information__date">
+                            <div class="information__span-date">
+                                22
+                            </div>
+                            .
+                            <div class="information__span-date">
+                                06
+                            </div>
+                            .
+                            <div class="information__span-date">
+                                2021
+                            </div>
+                        </div>
+                        <a class="information__title information__title-spec" href="#">
+                            Гуманитарная акция в пгт. Татарбунары
+                        </a>
+                        <div class="blogs__text">
+                            Иван Алексеев
+                        </div>
+                        <div class="information__image">
+                            <img class="information__img" src="img/information-img-big.jpg" alt="img">
+                        </div>
+                    </div>
+                    <div class="information__block">
+                        <div class="information__date">
+                            <div class="information__span-date">
+                                22
+                            </div>
+                            .
+                            <div class="information__span-date">
+                                06
+                            </div>
+                            .
+                            <div class="information__span-date">
+                                2021
+                            </div>
+                        </div>
+                        <a class="information__title" href="#">
+                            Миссия подарила новую жизнь бездомной...
+                        </a>
+                        <div class="blogs__text">
+                            Иван Алексеев
+                        </div>
+                        <div class="information__image">
+                            <img class="information__img" src="img/information-img1.jpg" alt="img">
+                        </div>
+                    </div>
+                    <div class="information__block">
+                        <div class="information__date">
+                            <div class="information__span-date">
+                                22
+                            </div>
+                            .
+                            <div class="information__span-date">
+                                06
+                            </div>
+                            .
+                            <div class="information__span-date">
+                                2021
+                            </div>
+                        </div>
+                        <a class="information__title" href="#">
+                            Реконструкция приюта для пожилых и инвалидов...
+                        </a>
+                        <div class="blogs__text">
+                            Иван Алексеев
+                        </div>
+                        <div class="information__image">
+                            <img class="information__img" src="img/information-img2.jpg" alt="img">
+                        </div>
+                    </div>
+
+                </div>
+                <button class="projects__button">
+                    Все блоги
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+</section>

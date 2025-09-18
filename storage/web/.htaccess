@@ -1,0 +1,20 @@
+RewriteEngine on
+
+RedirectMatch 403 /\..*$
+
+#RewriteRule ^/frontend/web/(.*)$ /$1 [QSA]
+#RewriteRule ^/en/top/(.*) /$1 [QSA]
+
+
+#RewriteCond %{REQUEST_URI} ^/frontend/
+#RewriteRule ^frontend/web/(.*)$ $1
+
+#RewriteBase /
+#RewriteRule ^/frontend/web/(.+)$ /$1 [L,QSA]
+
+
+RedirectMatch 301 /frontend/web/(.*) /$1
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . index.php

@@ -1,0 +1,21 @@
+{
+  "mcpServers": {
+    "Figma": {
+      "command": "node",
+      "args": ["/Users/vaoferi/FIGMA-MCP-PROXY/figma.mcp.js"],
+      "env": { "FIGMA_TOKEN": "figd_ko03MYx7Z-ky0s9WcBWNZuIzfRB0PnJ9FXj2sVKY" }
+    },
+    "GitHub": {
+      "command": "node",
+      "args": ["/Users/vaoferi/FIGMA-MCP-PROXY/github.mcp.js"],
+      "env": { "GITHUB_TOKEN": "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" }
+    },
+    "Context7": {
+      "url": "https://mcp.context7.com/mcp",
+      "headers": {
+        "Authorization": "Bearer ctx7sk-d163824d-21d0-4c25-a4d1-302a3b490c14",
+        "X-API-Key": "ctx7sk-d163824d-21d0-4c25-a4d1-302a3b490c14"
+      }
+    }
+  }
+}

@@ -1,0 +1,67 @@
+/* Figma-derived design tokens for About NLM pages */
+.aboutnlm-page{
+  /* Typography */
+  --nlm-font-sans: "Century Gothic", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  --nlm-font-weight-regular: 400;
+  --nlm-font-weight-medium: 500;
+  --nlm-font-weight-bold: 700;
+
+  /* Colors */
+  /* Text in Figma examples often ~25% black (~#404040) */
+  --nlm-text: #404040;
+  --nlm-heading: #202020;
+  --nlm-bg: #F5F7FA;
+  --nlm-surface: #FFFFFF;
+  /* Accent falls back to existing site accent if present */
+  --nlm-accent: #173750;
+
+  /* Surfaces */
+  --nlm-radius: 12px;       /* common 10–12px corners in designs */
+  --nlm-radius-lg: 14px;    /* larger card radius */
+  --nlm-shadow-md: 0 6px 20px rgba(23,55,80,.08);
+  --nlm-shadow-lg: 0 12px 32px rgba(44,62,80,.10);
+
+  /* Containers (Desktop frames) */
+  --nlm-container-xxl: 1320px;  /* Desktop - 1920px about content width */
+  --nlm-container-xl: 1140px;   /* Desktop - 1140px (Recommended) */
+  --nlm-container-lg: 960px;    /* Desktop - 1320px about alternative */
+  --nlm-container-md: 720px;    /* Tablet 1 */
+  --nlm-container-sm: 540px;    /* Mobile 1 */
+}
+
+/* Optional base font & color application inside the page scope */
+.aboutnlm-page, .aboutnlm-page *{
+  font-family: var(--nlm-font-sans);
+}
+.aboutnlm-page{ color: var(--nlm-text); }
+
+
+/* Auto-generated from Figma API: basic tokens */
+:root{
+  --nlm-color-1: #173750;
+  --nlm-color-2: #FFFFFF;
+  --nlm-color-3: #F5F7FA;
+  --nlm-color-4: #000000;
+  --nlm-color-5: #404040;
+  --nlm-color-6: #DEDEDE;
+  --nlm-color-7: #EEFF00;
+  --nlm-color-8: #B5E1FF;
+  --nlm-color-9: #D9D9D9;
+  --nlm-color-10: #F58712;
+  --nlm-color-text: #173750;
+  --nlm-color-heading: #FFFFFF;
+  --nlm-color-accent: #F5F7FA;
+  --nlm-font-1: "Inter", sans-serif;
+  --nlm-font-2: "Century Gothic", sans-serif;
+  --nlm-font-size-14: 14px;
+  --nlm-font-size-16: 16px;
+  --nlm-font-size-18: 18px;
+  --nlm-font-size-20: 20px;
+  --nlm-font-size-24: 24px;
+  --nlm-font-size-32: 32px;
+  --nlm-radius-1: 1px;
+  --nlm-radius-3: 3px;
+  --nlm-radius-5: 5px;
+  --nlm-radius-10: 10px;
+  --nlm-radius-15: 15px;
+}

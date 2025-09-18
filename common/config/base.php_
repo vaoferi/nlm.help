@@ -1,0 +1,271 @@
+<?php
+
+use kartik\datecontrol\Module;
+use VK\OAuth\Scopes\VKOAuthUserScope;
+use VK\OAuth\VKOAuthDisplay;
+
+$config = [
+    'name' => 'New Life',
+    'vendorPath' => __DIR__ . '/../../vendor',
+    'extensions' => require(__DIR__ . '/../../vendor/yiisoft/extensions.php'),
+    'sourceLanguage' => 'en-US',
+    'language' => 'en',
+    'bootstrap' => ['log'],
+    'aliases' => [
+        '@bower' => '@vendor/bower-asset',
+        '@npm' => '@vendor/npm-asset',
+    ],
+    'modules' => [
+        'datecontrol' => [
+            'class' => 'kartik\datecontrol\Module',
+            // format settings for saving each date attribute (PHP format example)
+            'saveSettings' => [
+                Module::FORMAT_DATE => 'php:Y-m-d', // saves as unix timestamp
+                Module::FORMAT_TIME => 'php:H:i:s',
+                Module::FORMAT_DATETIME => 'php:Y-m-d H:i:s',
+            ],
+            // automatically use kartik\widgets for each of the above formats
+            'autoWidget' => true,
+        ]
+    ],
+    'components' => [
+        'posting' => [
+            'class' => \common\components\social\PostingComponent::class,
+            'tokenStorage' => \common\models\TokenStorage::class,
+            'clients' => [
+                'vk' => [
+                    'class' => \common\components\social\VkClient::class,
+                    'owner_id' => -139266071,//User ID or community ID. Use a negative value to designate a community ID.
+                ],
+                'ok' => [
+                    'class' => \common\components\social\OKClient::class,
+                    'group_id' => 54854433439868, // Community ID
+                    'public_key' => 'CBAGNIENEBABABABA',
+                    'secret_key' => '5C50299735DA19CAAC86AAED',
+                ],
+                'fb' => [
+                    'class' => \common\components\social\FbClient::class,
+                    'group_id' => 259384167473055, // https://graph.facebook.com/{fan-page-name}?access_token={access-token} to get page id
+                ],
+            ]
+        ],
+        'liqPay' => [
+            'class' => \common\components\payment\liqpay\LiqPay::class,
+            'public_key' => 'i69391837367',
+            'private_key' => '3GW5TmJjT95bB387Xx9ZweWTaV67f8jFHYi17i18',
+        ],
+        'authManager' => [
+            'class' => yii\rbac\DbManager::class,
+            'itemTable' => '{{%rbac_auth_item}}',
+            'itemChildTable' => '{{%rbac_auth_item_child}}',
+            'assignmentTable' => '{{%rbac_auth_assignment}}',
+            'ruleTable' => '{{%rbac_auth_rule}}'
+        ],
+
+        'cache' => [
+            'class' => yii\caching\FileCache::class,
+            'cachePath' => '@common/runtime/cache'
+        ],
+
+        'commandBus' => [
+            'class' => trntv\bus\CommandBus::class,
+            'middlewares' => [
+                [
+                    'class' => trntv\bus\middlewares\BackgroundCommandMiddleware::class,
+                    'backgroundHandlerPath' => '@console/yii',
+                    'backgroundHandlerRoute' => 'command-bus/handle',
+                ]
+            ]
+        ],
+
+        'formatter' => [
+            'class' => yii\i18n\Formatter::class,
+            'dateFormat' => 'php:d.m.Y',
+            'datetimeFormat' => 'php:d.m.Y H:i:s',
+            'currencyCode' => 'UAH',
+        ],
+
+        'glide' => [
+            'class' => trntv\glide\components\Glide::class,
+            'sourcePath' => '@storage/web/source',
+            'cachePath' => '@storage/cache',
+            'urlManager' => 'urlManagerStorage',
+            'maxImageSize' => env('GLIDE_MAX_IMAGE_SIZE'),
+            'signKey' => env('GLIDE_SIGN_KEY')
+        ],
+
+        'mailer' => [
+            'class' => yii\swiftmailer\Mailer::class,
+            'messageConfig' => [
+                'charset' => 'UTF-8',
+                'from' => env('ADMIN_EMAIL')
+            ]
+        ],
+
+        'db' => [
+            'class' => yii\db\Connection::class,
+            'dsn' => env('DB_DSN'),
+            'username' => env('DB_USERNAME'),
+            'password' => env('DB_PASSWORD'),
+            'tablePrefix' => env('DB_TABLE_PREFIX'),
+            'charset' => env('DB_CHARSET', 'utf8'),
+            'enableSchemaCache' => YII_ENV_PROD,
+        ],
+
+        'log' => [
+            'traceLevel' => YII_DEBUG ? 3 : 0,
+            'targets' => [
+                'db' => [
+                    'class' => 'yii\log\DbTarget',
+                    'levels' => ['error', 'warning'],
+                    'except' => ['yii\web\HttpException:*', 'yii\i18n\I18N\*'],
+                    'prefix' => function () {
+                        $url = !Yii::$app->request->isConsoleRequest ? Yii::$app->request->getUrl() : null;
+                        return sprintf('[%s][%s]', Yii::$app->id, $url);
+                    },
+                    'logVars' => [],
+                    'logTable' => '{{%system_log}}'
+                ]
+            ],
+        ],
+
+        'i18n' => [
+            'translations' => [
+                'app' => [
+                    'class' => yii\i18n\PhpMessageSource::class,
+                    'basePath' => '@common/messages',
+                ],
+                '*' => [
+                    'class' => yii\i18n\PhpMessageSource::class,
+                    'basePath' => '@common/messages',
+                    'fileMap' => [
+                        'common' => 'common.php',
+                        'backend' => 'backend.php',
+                        'frontend' => 'frontend.php',
+                    ],
+                    'on missingTranslation' => [backend\modules\translation\Module::class, 'missingTranslation']
+                ],
+                /* Uncomment this code to use DbMessageSource
+                 '*'=> [
+                    'class' => 'yii\i18n\DbMessageSource',
+                    'sourceMessageTable'=>'{{%i18n_source_message}}',
+                    'messageTable'=>'{{%i18n_message}}',
+                    'enableCaching' => YII_ENV_DEV,
+                    'cachingDuration' => 3600,
+                    'on missingTranslation' => ['\backend\modules\translation\Module', 'missingTranslation']
+                ],
+                */
+            ],
+        ],
+
+        'fileStorage' => [
+            'class' => trntv\filekit\Storage::class,
+            'baseUrl' => '@storageUrl/source',
+            'filesystem' => [
+                'class' => common\components\filesystem\LocalFlysystemBuilder::class,
+                'path' => '@storage/web/source'
+            ],
+            'as log' => [
+                'class' => common\behaviors\FileStorageLogBehavior::class,
+                'component' => 'fileStorage'
+            ]
+        ],
+
+        'keyStorage' => [
+            'class' => common\components\keyStorage\KeyStorage::class
+        ],
+
+        'urlManagerBackend' => \yii\helpers\ArrayHelper::merge(
+            [
+                'hostInfo' => env('BACKEND_HOST_INFO'),
+                'baseUrl' => env('BACKEND_BASE_URL'),
+            ],
+            require(Yii::getAlias('@backend/config/_urlManager.php'))
+        ),
+        'urlManagerFrontend' => \yii\helpers\ArrayHelper::merge(
+            [
+                'hostInfo' => env('FRONTEND_HOST_INFO'),
+                'baseUrl' => env('FRONTEND_BASE_URL'),
+            ],
+            require(Yii::getAlias('@frontend/config/_urlManager.php'))
+        ),
+        'urlManagerStorage' => \yii\helpers\ArrayHelper::merge(
+            [
+                'hostInfo' => env('STORAGE_HOST_INFO'),
+                'baseUrl' => env('STORAGE_BASE_URL'),
+            ],
+            require(Yii::getAlias('@storage/config/_urlManager.php'))
+        ),
+
+        'queue' => [
+            'class' => \yii\queue\file\Queue::class,
+            'path' => '@common/runtime/queue',
+        ],
+    ],
+    'params' => [
+        'adminEmail' => env('ADMIN_EMAIL'),
+        'robotEmail' => env('ROBOT_EMAIL'),
+        'signKey' => env('PAYMENT_SIGN_KEY'),
+        'availableLocales' => [
+            'ru' => 'ru',
+            'en' => 'en',
+            'de' => 'de',
+        ],
+        'defaultLanguage' => 'ru',
+        'acceptProviders' => [
+            'youtube'
+        ],
+        'vk' => [
+            'clientId' => 7031849, //Идентификатор Вашего приложения
+            'redirectUri' => 'https://oauth.vk.com/blank.html', //Адрес, на который будет переадресован пользователь после прохождения авторизации
+            'state' => 'auth', //Произвольная строка, которая будет возвращена вместе с результатом авторизации.
+            'display' => VKOAuthDisplay::PAGE, //Форма авторизации в отдельном окне
+            'scope' => [VKOAuthUserScope::WALL, VKOAuthUserScope::OFFLINE, VKOAuthUserScope::GROUPS, VKOAuthUserScope::PHOTOS], //Права
+        ],
+        'ok' => [
+            'clientId' => 1279776000, //Идентификатор Вашего приложения
+            'scope' => 'VALUABLE_ACCESS;GROUP_CONTENT;LONG_ACCESS_TOKEN',
+            'responseType' => 'token',
+            'redirectUri' => 'https://admin.nlm.help/auth/ok-callback',
+            'layout' => 'w',
+            'state' => 'auth',
+        ],
+        'fb' => [
+            'version' => 'v3.3',
+            'permissions' => ['email', 'manage_pages', 'publish_pages', 'pages_messaging', 'pages_show_list', 'pages_manage_cta', 'pages_manage_instant_articles'],
+            'redirectUri' => 'https://admin.nlm.help/auth/fb-callback',
+            'appId' => 415784542347891,
+            'secretKey' => 'a0cf072234142df99fd588481fb2e134',
+        ]
+    ],
+];
+
+if (YII_ENV_PROD) {
+//    $config['components']['log']['targets']['email'] = [
+//        'class' => yii\log\EmailTarget::class,
+//        'except' => ['yii\web\HttpException:*'],
+//        'levels' => ['error', 'warning'],
+//        'message' => ['from' => env('ROBOT_EMAIL'), 'to' => env('ADMIN_EMAIL')]
+//    ];
+}
+
+if (YII_ENV_DEV) {
+    $config['bootstrap'][] = 'gii';
+    $config['modules']['gii'] = [
+        'class' => yii\gii\Module::class
+    ];
+
+    $config['components']['cache'] = [
+        'class' => yii\caching\DummyCache::class
+    ];
+    $config['components']['mailer']['transport'] = [
+        'class' => 'Swift_SmtpTransport',
+        'host' => env('SMTP_HOST'),
+        'port' => env('SMTP_PORT'),
+        'username' => env('SMTP_USERNAME'),
+        'password' => env('SMTP_PASSWORD'),
+        'encryption' => env('SMTP_ENCRYPTION'),
+    ];
+}
+
+return $config;

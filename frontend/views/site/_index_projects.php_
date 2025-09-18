@@ -1,0 +1,47 @@
+<?php
+/**
+ * Created by Rex IT
+ * @author Konstantin Kharalampidi <kharalampidi@rexit.info>
+ * @var $this \yii\web\View
+ * @var $projects \common\models\Project[]
+ */
+?>
+
+<section class="progress">
+    <div class="container">
+        <div class="progress__wrap">
+            <?php foreach ($projects as $project) : ?>
+                <div class="progress__item">
+                    <div class="progress__top">
+                        <div class="progress__img">
+                            <div class="progress__img-wrap" style="background-image: url(<?= Yii::$app->glide->createSignedUrl([
+                                'glide/index',
+                                'path' => $project->thumbnail_path
+                            ], true) ?>);">
+                            </div>
+                        </div>
+                        <div class="progress__progressbar" style="background-size: <?= $project->getCollectedPercent() ?>% 100%;">
+                            <div class="progress__progressbar-info" style="right: <?= 100 - $project->getCollectedPercent() ?>%;">
+                            <span class="deadline-info"><?= Yii::t('frontend', 'Deadline: {date}', [
+                                    'date' => Yii::$app->formatter->asDate($project->due_date)
+                                ]) ?></span>
+                                <span class="progress-info"><?= Yii::t('frontend', 'Progress: {collected} / {required}', [
+                                        'collected' => Yii::$app->formatter->asCurrency($project->collected_amount),
+                                        'required' => Yii::$app->formatter->asCurrency($project->required_amount)
+                                    ]) ?></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="progress__bottom">
+                        <h3><?= $project->title ?></h3>
+                        <p><?= $project->short_description ?></p>
+                    </div>
+                    <div class="progress__links">
+                        <a href="<?= \yii\helpers\Url::to(['project/view', 'slug' => $project->slug]) ?>" title="details"><?= Yii::t('frontend', 'details') ?></a>
+                        <a href="<?= \yii\helpers\Url::to(['project/donate', 'id' => $project->id]) ?>"><?= Yii::t('frontend', 'I can help') ?></a>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</section>

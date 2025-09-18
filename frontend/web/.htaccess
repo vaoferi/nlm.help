@@ -1,0 +1,18 @@
+Options +FollowSymLinks
+
+RewriteEngine On
+#RewriteCond %{SERVER_PORT} 80
+#RewriteCond %{HTTP_HOST} ^(www\.)nlm\.help
+#RewriteRule ^(.*)$ https://nlm.help/$1 [R,L]
+
+#RewriteCond %{HTTP:SSL} !=1 [NC]
+#RewriteRule ^(.*) https://nlm.help/$1 [L,R=301]
+
+#Redirect 301 https://nlm.help/frontend/web/en/ https://nlm.help/en/
+#Redirect 301 https://nlm.help/en/frontend/web/en/ https://nlm.help/en/
+
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . index.php
+

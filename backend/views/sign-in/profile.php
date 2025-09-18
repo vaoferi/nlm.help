@@ -1,0 +1,52 @@
+<?php
+
+use common\models\UserProfile;
+use yii\helpers\Html;
+use yii\bootstrap5\ActiveForm;
+
+/* @var $this yii\web\View */
+/* @var $model common\models\UserProfile */
+/* @var $userSocialNetworks common\models\UserSocialNetwork[] */
+/* @var $form yii\bootstrap\ActiveForm */
+
+$this->title = Yii::t('backend', 'Edit profile')
+?>
+
+<div class="user-profile-form">
+
+    <?php $form = ActiveForm::begin() ?>
+
+    <?php echo $form->field($model, 'picture')->widget(\trntv\filekit\widget\Upload::class, [
+        'url'=>['avatar-upload']
+    ]) ?>
+
+    <?php echo $form->field($model, 'firstname')->textInput(['maxlength' => 255]) ?>
+
+    <?php echo $form->field($model, 'middlename')->textInput(['maxlength' => 255]) ?>
+
+    <?php echo $form->field($model, 'lastname')->textInput(['maxlength' => 255]) ?>
+
+    <?php echo $form->field($model, 'info')->textarea(['maxlength' => 1000]) ?>
+
+    <?php echo $form->field($model, 'position')->textInput(['maxlength' => 255]) ?>
+
+    <?php echo $form->field($model, 'locale')->dropDownlist(Yii::$app->params['availableLocales']) ?>
+
+    <?php echo $form->field($model, 'gender')->dropDownlist([
+        UserProfile::GENDER_FEMALE => Yii::t('backend', 'Female'),
+        UserProfile::GENDER_MALE => Yii::t('backend', 'Male')
+    ]) ?>
+
+    <?php foreach ($userSocialNetworks as $socialNetwork => $userSN): ?>
+        <label><?php echo \common\models\UserSocialNetwork::getSocialNetworkTitle($userSN->social_network) ?></label>
+        <?php echo $form->field($userSN, "[$socialNetwork]social_network")->label(false)->hiddenInput(['value' => $userSN->social_network]) ?>
+        <?php echo $form->field($userSN, "[$socialNetwork]link")->textInput(['maxlength' => 400])->label(false) ?>
+    <?php endforeach; ?>
+
+    <div class="form-group">
+        <?php echo Html::submitButton(Yii::t('backend', 'Update'), ['class' => 'btn btn-primary']) ?>
+    </div>
+
+    <?php ActiveForm::end() ?>
+
+</div>

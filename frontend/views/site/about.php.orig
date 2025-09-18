@@ -1,0 +1,173 @@
+<?php
+
+/**
+ * Created by Rex IT
+ * @author Konstantin Kharalampidi <kharalampidi@rexit.info>
+ */
+
+use common\models\UserSocialNetwork;
+use yii\helpers\Html;
+
+/* @var $this \yii\web\View */
+/* @var $users \common\models\User[] */
+$this->params['custom_header'] = [
+    'class' => 'albulm-hero about-us-hero',
+    'content' => $this->render('_header_slider_about')
+];
+?>
+<article class="news-one-info about-page-info">
+    <h1>About us</h1>
+    <p>Christian Mission "New Life" unites people who love God and serve people. The organization's activity is aimed at helping those in need - those who find themselves in a difficult life situation.Mission has existed in Ukraine since 2010. Today
+        we are successfully implementing a number of projects - Help to survive, Feed the hungry, Chamber of Mercy, Heating centres. As part of these projects the organization creates points of the collection and distribution of humanitarian aid, heating
+        points for the homeless, opens social adaptation and rehabilitation centres, distributes food to the poor, helps in the provision of medical care, etc.The mission began its work in the city of Odessa. Today the organization's activities have
+        spread to the whole territory of Ukraine. During 8 years of work 12 branches were established in various cities and towns of the country. More people became volunteers and partners of the mission – there are 5 to 60 volunteers at each branch."New
+        Life" collaborates with International Ministry of Charity Emmanuel (IMOCE, Young Men's Christian Association (YMCA Odessa), Global Christian Support (GCS) and others.</p>
+    <p>It became possible to embrace even more Ukrainians with care and attention with the support of these missions.Every day people apply to the organization with their problems — they are homeless, co-addicted, socially unprotected categories of the
+        population or simply those who have become hostage to circumstances. At the centres they will find a positive response and a desire to help them find a solution to their problems and to build hope for the future, some of them start a new life
+        here. After all, the main purpose of the mission is not just to provide one-time assistance but to help those who really want it to break out of the vicious circle and become fully fledged individuals.Christian Mission "New Life" under the motto
+        "Love God - Serve people!" continues to grow and gains new dimensions bringing together all those who are not indifferent to the problems of other people and are ready to help their neighbor not by word but by deed.</p>
+</article>
+<section id="about-us__info-section" class="news-one-slider-wrap">
+    <div class="about-us__info-wrap">
+        <?php foreach ($users as $user): ?>
+            <div id="author-<?php echo Html::encode($user->id); ?>" class="about-us__info">
+                <button class="about-us__info-close" aria-label="close popup"></button>
+                <div class="about-us__info-row">
+                    <?php if ($user->userProfile->getFullName()): ?>
+                        <span><?php echo Yii::t('frontend', 'Name:') ?></span>
+                        <p><?php echo Html::encode($user->userProfile->getFullName()); ?></p>
+                    <?php endif; ?>
+                </div>
+                <div class="about-us__info-row">
+                    <?php if ($user->userProfile->info): ?>
+                        <span><?php echo Yii::t('frontend', 'About myself:') ?></span>
+                        <p><?php echo Html::encode($user->userProfile->info); ?></p>
+                    <?php endif; ?>
+                </div>
+                <div class="about-us__info-row">
+                    <?php if (!empty($user->userSocialNetworks)): ?>
+                        <span><?php echo Yii::t('frontend', 'Contacts:') ?></span>
+                        <ul>
+                            <?php foreach ($user->userSocialNetworks as $userSocialNetwork): ?>
+                                <li>
+                                    <span><?php echo UserSocialNetwork::getSocialNetworkTitle($userSocialNetwork->social_network) ?></span>
+                                    <a title="<?php echo $userSocialNetwork->link; ?>" target="_blank" rel="nofollow" href="<?php echo $userSocialNetwork->link; ?>"><?php echo $userSocialNetwork->link; ?></a>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php endif; ?>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+
+    <div class="news-one-slider about-page-slider--js">
+        <?php foreach ($users as $user): ?>
+            <?php $photoSrc = Yii::$app->glide->createSignedUrl(['glide/index', 'path' => $user->photo_path], true);
+            if ($photoSrc): ?>
+                <div class="news-one-slider-item" data-id="author-<?php echo Html::encode($user->id); ?>">
+                    <img src="<?php /** @var common\models\User $user */ echo $photoSrc ?>">
+                </div>
+            <?php endif; ?>
+        <?php endforeach; ?>
+    </div>
+</section>
+<section class="about-page-story">
+    <div class="container">
+        <h2>Our story</h2>
+        <ul class="about-page-story__list">
+            <li class="about-page-story__item">
+                <span>2010</span>
+                <ul class="about-page-story-inner__list">
+                    <li class="about-page-story-inner__item">Beginning of the ministry to the homeless of Fedor Gerasimov</li>
+                    <li class="about-page-story-inner__item">Beginning of the ministry in prisons as chaplains</li>
+                </ul>
+            </li>
+            <li class="about-page-story__item">
+                <span>2011</span>
+                <ul class="about-page-story-inner__list">
+                    <li class="about-page-story-inner__item">Registration of Christian Mission "New Life"</li>
+                </ul>
+            </li>
+            <li class="about-page-story__item">
+                <span>2013</span>
+                <ul class="about-page-story-inner__list">
+                    <li class="about-page-story-inner__item">Start of a productive collaboration with media</li>
+                </ul>
+            </li>
+            <li class="about-page-story__item">
+                <span>2014</span>
+                <ul class="about-page-story-inner__list">
+                    <li class="about-page-story-inner__item">Beginning of a productive cooperation with the authorities accounting for the numbers of the homeless and the poor</li>
+                    <li class="about-page-story-inner__item">Begin working as volunteers at the heating points</li>
+                    <li class="about-page-story-inner__item">YMCA volunteers opened the ministry "Journey to Freedom" at the Rehabilitation Centre "New Life"</li>
+                    <li class="about-page-story-inner__item">Opening of a branch in Cherkassy</li>
+                </ul>
+            </li>
+            <li class="about-page-story__item">
+                <span>2015</span>
+                <ul class="about-page-story-inner__list">
+                    <li class="about-page-story-inner__item">Opening of the second branch in Cherkassy</li>
+                    <li class="about-page-story-inner__item">The organization began work in the Correctional Facilities No 51 and 74 of the city of Odessa where social and spiritual work was carried out with the convicts, humanitarian aid was also provided</li>
+                    <li class="about-page-story-inner__item">Project «Help to Survive» was started. Project representatives and volunteers organized the collection and distribution points for humanitarian assistance to socially vulnerable groups of the population</li>
+                    <li class="about-page-story-inner__item">The daily feeding of the homeless is started in front of the Railway Station (Pushkin square) under the name of the project "Share bread with the hungry"</li>
+                </ul>
+            </li>
+            <li class="about-page-story__item">
+                <span>2016</span>
+                <ul class="about-page-story-inner__list">
+                    <li class="about-page-story-inner__item">The heating points for the homeless people are deployed in Odessa. One of them is deployed in Primorskiy district on Starosnennaya Square. Another is deployed in Suvorovskiy district on Julio-Curie street. The Christian Mission "New Life"
+                        was invited as organizers</li>
+                    <li class="about-page-story-inner__item">Opening of a branch in Zaporizhia</li>
+                </ul>
+            </li>
+            <li class="about-page-story__item">
+                <span>2017</span>
+                <ul class="about-page-story-inner__list">
+                    <li class="about-page-story-inner__item">Opening of a shelter in the village Krasnoselka for the elderly people</li>
+                    <li class="about-page-story-inner__item">A rehabilitation center «New Life» in the village Velykiy Dalnik was opened</li>
+                    <li class="about-page-story-inner__item">Opening of a mission branch in Zaporizhia</li>
+                    <li class="about-page-story-inner__item">Beginning of the building of a house of mercy for the elderly in the city of Lubny</li>
+                    <li class="about-page-story-inner__item">Opening of a mission branch in Nikolaev for the project work "Help to Survive"</li>
+                    <li class="about-page-story-inner__item">Opening of a mission branch in Ochakov for the project work "Help to Survive"</li>
+                </ul>
+            </li>
+            <li class="about-page-story__item">
+                <span>2017</span>
+                <ul class="about-page-story-inner__list">
+                    <li class="about-page-story-inner__item">Opening of a mission branch in Pavlograd for the project work «Help to Survive» in the cities: Pavlograd, Poltava, Kiev, Arciz, Berezino, Kamenskoe, Dnieper, Ismail and Vinnitsa</li>
+                    <li class="about-page-story-inner__item">A rehabilitation center «New Life» in Zaporizhia</li>
+                    <li class="about-page-story-inner__item">Registration of New Life International Mission</li>
+                </ul>
+            </li>
+            <li class="about-page-story__item">
+                <span>2019</span>
+                <ul class="about-page-story-inner__list">
+                    <li class="about-page-story-inner__item">Opening of the project «New Life Creators» with New Life International Mission</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</section>
+<section class="news-one-slider-wrap about-page-diploma-slider-wrap">
+    <div class="news-one-slider about-page-diploma-slider about-page-diploma-slider--js">
+        <div class="news-one-slider-item">
+            <img src="/img/content/about-diploma-slider-1.png">
+        </div>
+        <div class="news-one-slider-item">
+            <img src="/img/content/about-diploma-slider-2.png">
+        </div>
+        <div class="news-one-slider-item">
+            <img src="/img/content/about-diploma-slider-3.png">
+        </div>
+        <div class="news-one-slider-item">
+            <img src="/img/content/about-diploma-slider-4.png">
+        </div>
+        <div class="news-one-slider-item">
+            <img src="/img/content/about-diploma-slider-5.png">
+        </div>
+        <div class="news-one-slider-item">
+            <img src="/img/content/about-diploma-slider-6.png">
+        </div>
+    </div>
+</section>
